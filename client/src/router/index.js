@@ -11,11 +11,6 @@ const routes = [
     name: "Predict",
     component: Predict,
   },
-  {
-    path: "/predict",
-    name: "Predict",
-    component: Predict,
-  },
 ];
 
 const router = new VueRouter({

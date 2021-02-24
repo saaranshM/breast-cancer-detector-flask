@@ -2,9 +2,11 @@
   <div>
     <h1>{{ msg }}</h1>
     <form method="post" enctype="multipart/form-data">
-      <input type="file" name="image" @change="postImage"/>
-      <input type="submit" value="Predict" />
+      <input type="file" name="image" @change="saveImage"/>
+      <!-- <input type="submit" value="Predict" /> -->
+
     </form>
+    <button @click="predict">Pre</button>
     <h3>Prediction: {{prediction}}</h3>
   </div>
 </template>
@@ -18,11 +20,12 @@ export default {
     return {
       msg: "Predict",
       prediction: 0,
+      image: null,
     };
   },
   methods: {
     getMessage() {
-      const path = "http://localhost:5000/predict";
+      const path = "http://localhost:5000/";
       axios
         .get(path)
         .then((res) => {
@@ -33,10 +36,16 @@ export default {
           console.log(error);
         });
     },
-    postImage(event) {
-      const path = "http://localhost:5000/predict";
+    saveImage(event) {
+
+      this.image = event.target.files[0];
+
+    },
+    predict() {
+      console.log('predict');
+      const path = "http://localhost:5000/";
       let form = new FormData();
-      form.append('image', event.target.files[0] )
+      form.append('image', this.image )
       axios.post(path, form).then((res) => {
         console.log(res);
         this.prediction = res.data.prediction

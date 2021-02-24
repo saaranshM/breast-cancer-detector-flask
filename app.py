@@ -16,7 +16,7 @@ app.config.from_object(__name__)
 
 CORS(app, resources={r'/*': {'origins': '*'}})
 
-@app.route('/predict', methods=['POST', 'GET'])
+@app.route('/', methods=['POST', 'GET'])
 def predict():
     if request.method == "POST":
         image_file = request.files['image']
