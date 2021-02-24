@@ -28,6 +28,7 @@ get_model()
 
 @app.route("/predict", methods=["POST"])
 def predict():
+    print('predict')
     message = request.get_json(force=True)
     print(message)
     encoded = message['image']
