@@ -5,7 +5,8 @@
       <input type="file" name="image" @change="saveImage" />
       <!-- <input type="submit" value="Predict" /> -->
     </form>
-    <button v-if="image" @click="predict">Pre</button>
+    <v-btn v-if="image" @click="predict">Pre</v-btn>
+    <v-img height="50" width="50" v-if="imageToShow" :src="imageToShow"></v-img>
     <h3>Prediction: {{ prediction }}</h3>
   </div>
 </template>
@@ -20,6 +21,7 @@ export default {
       msg: "Predict",
       prediction: 0,
       image: null,
+      imageToShow:null,
     };
   },
   methods: {
@@ -37,6 +39,13 @@ export default {
     },
     saveImage(event) {
       this.image = event.target.files[0];
+      var reader = new FileReader();
+
+      reader.onload = e => {
+        this.imageToShow = e.target.result
+      }
+
+      this.imageToShow = reader.readAsDataURL(event.target.files[0])
     },
     predict() {
       console.log("predict");
@@ -47,7 +56,11 @@ export default {
         .post(path, form)
         .then((res) => {
           console.log(res);
-          this.prediction = res.data.prediction;
+          if(res.data.prediction.indexOf(Math.round(...res.data.prediction))){
+            this.prediction = "HAS CANCER!"
+          } else {
+            this.prediction = "NO CANCER!"
+          }
           console.log("SUCCESS");
         })
         .catch((err) => {

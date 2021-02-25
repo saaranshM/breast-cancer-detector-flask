@@ -1,13 +1,9 @@
 from flask import Flask, request, jsonify,abort,Response
-from PIL import Image
-import base64
-import io
 import os
 import numpy as np
 import cv2
 from flask_cors import CORS
 import tensorflow as tf
-from tensorflow.keras.preprocessing.image import ImageDataGenerator, img_to_array
 from tensorflow.keras.models import load_model
 
 UPLOAD_FOLDER = 'D:\Tensorflow-files\Projects\BreastCancerDetectoreFlask\static'
@@ -49,7 +45,7 @@ def predict():
             predcition = model.predict([image_to_predict]).tolist()
             data = {
                 'title': 'Upload New File!',
-                'prediction': predcition,
+                'prediction': predcition[0],
             }
             print("done")
             return jsonify(data)
