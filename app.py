@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify,abort
+from flask import Flask, request, jsonify,abort,Response
 from PIL import Image
 import base64
 import io
@@ -19,16 +19,10 @@ CORS(app, resources={r'/*': {'origins': '*'}})
 
 MODEL_PATH = 'breast-cancer-detector.h5'
 
-model = None
 
 def model_load():
-    model = load_model(MODEL_PATH)
-    if model:
-        print("Model Loaded!")
-        return True
-    else:
-        print("Model Loading Failed!")
-        return False
+    print("Model Loaded!")
+    return load_model(MODEL_PATH)
 
 
 def process_image(filepath):
@@ -40,7 +34,8 @@ def process_image(filepath):
 @app.route('/', methods=['POST', 'GET'])
 def predict():
     if request.method == "POST":
-        if not model_load():
+        model = model_load()
+        if not model:
             abort(500)
         image_file = request.files['image']
         if image_file:
@@ -50,9 +45,11 @@ def predict():
                 image_file.filename
             )
             image_file.save(image_location)
+            image_to_predict = process_image(image_location)
+            predcition = model.predict([image_to_predict]).tolist()
             data = {
                 'title': 'Upload New File!',
-                'prediction': 1,
+                'prediction': predcition,
             }
             print("done")
             return jsonify(data)
