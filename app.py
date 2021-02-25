@@ -6,7 +6,8 @@ from flask_cors import CORS
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 
-UPLOAD_FOLDER = 'D:\Tensorflow-files\Projects\BreastCancerDetectoreFlask\static'
+UPLOAD_FOLDER = os.getcwd()
+UPLOAD_FOLDER = os.path.join(UPLOAD_FOLDER,'static')
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -19,6 +20,8 @@ MODEL_PATH = 'breast-cancer-detector.h5'
 def model_load():
     print("Model Loaded!")
     return load_model(MODEL_PATH)
+
+model_load()
 
 
 def process_image(filepath):
