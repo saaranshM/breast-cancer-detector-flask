@@ -5,4 +5,5 @@ tensorflow==2.3.0
 Pillow
 gunicorn
 opencv-python
+matplotlib
 
