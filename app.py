@@ -3,7 +3,7 @@ import os
 import numpy as np
 import cv2
 from flask_cors import CORS
-from keras.models import load_model
+from tensorflow.keras.models import load_model
 
 UPLOAD_FOLDER = os.getcwd()
 UPLOAD_FOLDER = os.path.join(UPLOAD_FOLDER,'static')
