@@ -1,9 +1,7 @@
 Flask
 numpy
 Flask-Cors
-keras
-Pillow
+tensorflow
 gunicorn
 opencv-python
-matplotlib
 
