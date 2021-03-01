@@ -1,2 +1,5 @@
 /venv
 /client
+/.idea
+/static
+/__pycache__

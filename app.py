@@ -31,31 +31,35 @@ def process_image(filepath):
 
 @app.route('/', methods=['POST', 'GET'])
 def predict():
+    predcitions = []
+    data = {
+             'model_predictions': []
+        }
+
     if request.method == "POST":
         model = model_load()
         if not model:
             abort(500)
-        image_file = request.files['image']
-        if image_file:
-            if not os.path.exists(UPLOAD_FOLDER): os.mkdir(UPLOAD_FOLDER)
-            image_location = os.path.join(
-                UPLOAD_FOLDER,
-                image_file.filename
-            )
-            image_file.save(image_location)
-            image_to_predict = process_image(image_location)
-            predcition = model.predict([image_to_predict]).tolist()
-            data = {
-                'title': 'Upload New File!',
-                'prediction': predcition[0],
-            }
-            print("done")
-            return jsonify(data)
-    data = {
-        'title': 'Upload New File!',
-        'prediction': 0,
-    }
-    return jsonify(data)
+
+        if not os.path.exists(UPLOAD_FOLDER): os.mkdir(UPLOAD_FOLDER)
+        res = request.files.to_dict(flat=False)
+        for image_file in res['images']:
+            if image_file:
+                image_location = os.path.join(
+                    UPLOAD_FOLDER,
+                    image_file.name
+                )
+                image_file.save(image_location)
+                image_to_predict = process_image(image_location)
+                predcition = int(np.argmax(model.predict([image_to_predict])))
+                img_obj = {
+                    'name': image_file.filename,
+                    'prediction': predcition
+                }
+                data['model_predictions'].append(img_obj)
+                os.remove(image_location)
+        print("done")
+        return jsonify(data)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
